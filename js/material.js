@@ -1,19 +1,24 @@
 /* ============================================================
-   TECNOLOGÍAS
+   MATERIALS.JS
+   Datos utilizados por el simulador RF
+============================================================ */
+
+console.log("materials.js cargado correctamente");
+
+
+/* ============================================================
+   TECNOLOGÍAS Y FRECUENCIAS
 ============================================================ */
 
 /*
-    Frecuencias representativas utilizadas por el modelo.
+    Las frecuencias representan escenarios académicos
+    definidos para el proyecto.
 
-    IMPORTANTE:
-    Una generación celular puede utilizar diferentes bandas
-    dependiendo del operador y país.
-
-    Estas frecuencias se utilizan únicamente como escenarios
-    académicos definidos por el proyecto.
+    Una tecnología celular real puede operar en diferentes
+    bandas dependiendo del país y operador.
 */
 
-const tecnologias = {
+window.tecnologias = {
 
     850: {
         nombre: "2G",
@@ -48,28 +53,24 @@ const tecnologias = {
 };
 
 
-
 /* ============================================================
    MATERIALES
 ============================================================ */
 
 /*
-    ATENCIÓN:
+    IMPORTANTE:
 
-    Los coeficientes utilizados a continuación son valores
-    académicos ilustrativos.
+    Los siguientes coeficientes son valores académicos
+    simplificados para demostrar el comportamiento del modelo.
 
-    No representan valores certificados de laboratorio ni deben
-    emplearse en diseño real de infraestructura.
+    Unidad:
+        dB por metro
 
-    El propósito es demostrar matemáticamente cómo un coeficiente
-    dependiente de la frecuencia modifica el balance de potencia.
-
-    Unidad utilizada:
-        dB / metro
+    No deben considerarse valores certificados para diseño
+    de infraestructura real.
 */
 
-const materiales = {
+window.materiales = {
 
     concreto: {
 
@@ -77,7 +78,7 @@ const materiales = {
             "Concreto reforzado",
 
         descripcion:
-            "Material de alta densidad con refuerzo estructural.",
+            "Material constructivo de alta densidad con refuerzo estructural.",
 
         coeficientes: {
 
@@ -90,7 +91,6 @@ const materiales = {
             3500: 28,
 
             28000: 75
-
         }
 
     },
@@ -115,7 +115,6 @@ const materiales = {
             3500: 15,
 
             28000: 42
-
         }
 
     },
@@ -140,7 +139,6 @@ const materiales = {
             3500: 50,
 
             28000: 95
-
         }
 
     }
@@ -148,16 +146,36 @@ const materiales = {
 };
 
 
-
 /* ============================================================
-   UMBRAL
+   UMBRAL DEL PROYECTO
 ============================================================ */
 
 /*
-    Umbral definido en la guía del proyecto.
+    Umbral indicado en la guía académica.
 
-    Este valor NO representa un umbral universal para
-    todas las redes celulares.
+    No representa un umbral universal para todas las
+    tecnologías celulares.
 */
 
-const UMBRAL_PROYECTO_DBM = -95;
+window.UMBRAL_PROYECTO_DBM = -95;
+
+
+/* ============================================================
+   VERIFICACIÓN
+============================================================ */
+
+console.log(
+    "Tecnologías disponibles:",
+    window.tecnologias
+);
+
+console.log(
+    "Materiales disponibles:",
+    window.materiales
+);
+
+console.log(
+    "Umbral del proyecto:",
+    window.UMBRAL_PROYECTO_DBM,
+    "dBm"
+);

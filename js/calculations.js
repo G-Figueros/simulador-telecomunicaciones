@@ -1,163 +1,486 @@
 /* ============================================================
-   TECNOLOGÍAS
+   CALCULATIONS.JS
+   Funciones matemáticas del simulador RF
+============================================================ */
+
+console.log("calculations.js cargado correctamente");
+
+
+/* ============================================================
+   VELOCIDAD DE LA LUZ
+============================================================ */
+
+window.VELOCIDAD_LUZ = 299792458;
+
+
+/* ============================================================
+   LONGITUD DE ONDA
 ============================================================ */
 
 /*
-    Frecuencias representativas utilizadas por el modelo.
+    Fórmula:
 
-    IMPORTANTE:
-    Una generación celular puede utilizar diferentes bandas
-    dependiendo del operador y país.
+        λ = c / f
 
-    Estas frecuencias se utilizan únicamente como escenarios
-    académicos definidos por el proyecto.
+    λ = longitud de onda en metros
+    c = velocidad de la luz en m/s
+    f = frecuencia en Hz
 */
 
-const tecnologias = {
+window.calcularLongitudOnda = function (
+    frecuenciaMHz
+) {
 
-    850: {
-        nombre: "2G",
-        frecuenciaMHz: 850,
-        etiqueta: "850 MHz"
-    },
+    frecuenciaMHz =
+        Number(frecuenciaMHz);
 
-    1900: {
-        nombre: "3G",
-        frecuenciaMHz: 1900,
-        etiqueta: "1900 MHz"
-    },
 
-    2100: {
-        nombre: "4G",
-        frecuenciaMHz: 2100,
-        etiqueta: "2100 MHz"
-    },
+    if (
+        !Number.isFinite(frecuenciaMHz) ||
+        frecuenciaMHz <= 0
+    ) {
 
-    3500: {
-        nombre: "5G Sub-6",
-        frecuenciaMHz: 3500,
-        etiqueta: "3.5 GHz"
-    },
+        return 0;
 
-    28000: {
-        nombre: "5G mmWave",
-        frecuenciaMHz: 28000,
-        etiqueta: "28 GHz"
     }
+
+
+    const frecuenciaHz =
+        frecuenciaMHz * 1000000;
+
+
+    const longitudOnda =
+        window.VELOCIDAD_LUZ /
+        frecuenciaHz;
+
+
+    return longitudOnda;
 
 };
 
 
-
 /* ============================================================
-   MATERIALES
+   FREE SPACE PATH LOSS
 ============================================================ */
 
 /*
-    ATENCIÓN:
+    Fórmula:
 
-    Los coeficientes utilizados a continuación son valores
-    académicos ilustrativos.
+        FSPL =
+        32.44
+        + 20 log10(f MHz)
+        + 20 log10(d km)
 
-    No representan valores certificados de laboratorio ni deben
-    emplearse en diseño real de infraestructura.
-
-    El propósito es demostrar matemáticamente cómo un coeficiente
-    dependiente de la frecuencia modifica el balance de potencia.
-
-    Unidad utilizada:
-        dB / metro
+    Resultado:
+        dB
 */
 
-const materiales = {
+window.calcularFSPL = function (
+    frecuenciaMHz,
+    distanciaMetros
+) {
 
-    concreto: {
-
-        nombre:
-            "Concreto reforzado",
-
-        descripcion:
-            "Material de alta densidad con refuerzo estructural.",
-
-        coeficientes: {
-
-            850: 12,
-
-            1900: 18,
-
-            2100: 20,
-
-            3500: 28,
-
-            28000: 75
-
-        }
-
-    },
+    frecuenciaMHz =
+        Number(frecuenciaMHz);
 
 
-    ladrillo: {
-
-        nombre:
-            "Ladrillo",
-
-        descripcion:
-            "Material constructivo de densidad media.",
-
-        coeficientes: {
-
-            850: 6,
-
-            1900: 9,
-
-            2100: 10,
-
-            3500: 15,
-
-            28000: 42
-
-        }
-
-    },
+    distanciaMetros =
+        Number(distanciaMetros);
 
 
-    acero: {
+    if (
+        !Number.isFinite(frecuenciaMHz) ||
+        !Number.isFinite(distanciaMetros) ||
+        frecuenciaMHz <= 0 ||
+        distanciaMetros <= 0
+    ) {
 
-        nombre:
-            "Malla de acero / Blindaje",
-
-        descripcion:
-            "Representación conceptual de una barrera metálica.",
-
-        coeficientes: {
-
-            850: 25,
-
-            1900: 35,
-
-            2100: 38,
-
-            3500: 50,
-
-            28000: 95
-
-        }
+        return 0;
 
     }
+
+
+    const distanciaKm =
+        distanciaMetros /
+        1000;
+
+
+    const fspl =
+
+        32.44 +
+
+        20 *
+        Math.log10(
+            frecuenciaMHz
+        ) +
+
+        20 *
+        Math.log10(
+            distanciaKm
+        );
+
+
+    return fspl;
 
 };
 
 
-
 /* ============================================================
-   UMBRAL
+   PÉRDIDA DEL MATERIAL
 ============================================================ */
 
 /*
-    Umbral definido en la guía del proyecto.
+    Modelo simplificado:
 
-    Este valor NO representa un umbral universal para
-    todas las redes celulares.
+        Lmaterial = α × t
+
+    α = coeficiente de atenuación en dB/m
+    t = grosor del material en metros
 */
 
-const UMBRAL_PROYECTO_DBM = -95;
+window.calcularPerdidaMaterial = function (
+    coeficiente,
+    grosorMetros
+) {
+
+    coeficiente =
+        Number(coeficiente);
+
+
+    grosorMetros =
+        Number(grosorMetros);
+
+
+    if (
+        !Number.isFinite(coeficiente) ||
+        !Number.isFinite(grosorMetros) ||
+        coeficiente < 0 ||
+        grosorMetros < 0
+    ) {
+
+        return 0;
+
+    }
+
+
+    return (
+        coeficiente *
+        grosorMetros
+    );
+
+};
+
+
+/* ============================================================
+   PÉRDIDA TOTAL
+============================================================ */
+
+/*
+    Ltotal =
+        FSPL
+        +
+        Lmaterial
+*/
+
+window.calcularPerdidaTotal = function (
+    fspl,
+    perdidaMaterial
+) {
+
+    fspl =
+        Number(fspl);
+
+
+    perdidaMaterial =
+        Number(perdidaMaterial);
+
+
+    if (
+        !Number.isFinite(fspl) ||
+        !Number.isFinite(perdidaMaterial)
+    ) {
+
+        return 0;
+
+    }
+
+
+    return (
+        fspl +
+        perdidaMaterial
+    );
+
+};
+
+
+/* ============================================================
+   POTENCIA RECIBIDA
+============================================================ */
+
+/*
+    Balance simplificado:
+
+        Pr =
+        Pt
+        + Gt
+        + Gr
+        - Ltotal
+
+    Pt = potencia transmitida en dBm
+    Gt = ganancia de antena TX en dBi
+    Gr = ganancia de antena RX en dBi
+*/
+
+window.calcularPotenciaRecibida = function (
+    potenciaTx,
+    gananciaTx,
+    gananciaRx,
+    perdidaTotal
+) {
+
+    potenciaTx =
+        Number(potenciaTx);
+
+
+    gananciaTx =
+        Number(gananciaTx);
+
+
+    gananciaRx =
+        Number(gananciaRx);
+
+
+    perdidaTotal =
+        Number(perdidaTotal);
+
+
+    if (
+        !Number.isFinite(potenciaTx) ||
+        !Number.isFinite(gananciaTx) ||
+        !Number.isFinite(gananciaRx) ||
+        !Number.isFinite(perdidaTotal)
+    ) {
+
+        return 0;
+
+    }
+
+
+    return (
+
+        potenciaTx +
+
+        gananciaTx +
+
+        gananciaRx -
+
+        perdidaTotal
+
+    );
+
+};
+
+
+/* ============================================================
+   MARGEN CONTRA EL UMBRAL
+============================================================ */
+
+/*
+    Margen =
+        Pr - Umbral
+*/
+
+window.calcularMargen = function (
+    potenciaRecibida,
+    umbral
+) {
+
+    potenciaRecibida =
+        Number(potenciaRecibida);
+
+
+    umbral =
+        Number(umbral);
+
+
+    if (
+        !Number.isFinite(potenciaRecibida) ||
+        !Number.isFinite(umbral)
+    ) {
+
+        return 0;
+
+    }
+
+
+    return (
+        potenciaRecibida -
+        umbral
+    );
+
+};
+
+
+/* ============================================================
+   EVALUAR SEÑAL
+============================================================ */
+
+window.evaluarSenal = function (
+    potenciaRecibida,
+    umbral
+) {
+
+    potenciaRecibida =
+        Number(potenciaRecibida);
+
+
+    umbral =
+        Number(umbral);
+
+
+    if (
+        potenciaRecibida <
+        umbral
+    ) {
+
+        return {
+
+            estado:
+                "Por debajo del umbral",
+
+            clase:
+                "status-low"
+        };
+
+    }
+
+
+    return {
+
+        estado:
+            "Por encima del umbral",
+
+        clase:
+            "status-ok"
+    };
+
+};
+
+
+/* ============================================================
+   FORMATEAR FRECUENCIA
+============================================================ */
+
+window.formatearFrecuencia = function (
+    frecuenciaMHz
+) {
+
+    frecuenciaMHz =
+        Number(frecuenciaMHz);
+
+
+    if (
+        !Number.isFinite(frecuenciaMHz)
+    ) {
+
+        return "--";
+
+    }
+
+
+    if (
+        frecuenciaMHz >= 1000
+    ) {
+
+        const frecuenciaGHz =
+            frecuenciaMHz /
+            1000;
+
+
+        if (
+            Number.isInteger(
+                frecuenciaGHz
+            )
+        ) {
+
+            return (
+                frecuenciaGHz +
+                " GHz"
+            );
+
+        }
+
+
+        return (
+            frecuenciaGHz
+                .toFixed(1) +
+            " GHz"
+        );
+
+    }
+
+
+    return (
+        frecuenciaMHz +
+        " MHz"
+    );
+
+};
+
+
+/* ============================================================
+   LIMITAR VALOR
+============================================================ */
+
+window.limitarValor = function (
+    valor,
+    minimo,
+    maximo
+) {
+
+    valor =
+        Number(valor);
+
+
+    minimo =
+        Number(minimo);
+
+
+    maximo =
+        Number(maximo);
+
+
+    return Math.min(
+
+        Math.max(
+            valor,
+            minimo
+        ),
+
+        maximo
+
+    );
+
+};
+
+
+/* ============================================================
+   PRUEBAS AUTOMÁTICAS BÁSICAS
+============================================================ */
+
+console.log(
+    "Prueba longitud de onda 1900 MHz:",
+    window.calcularLongitudOnda(1900)
+        .toFixed(4),
+    "m"
+);
+
+
+console.log(
+    "Prueba FSPL 1900 MHz / 20 m:",
+    window.calcularFSPL(
+        1900,
+        20
+    ).toFixed(2),
+    "dB"
+);
