@@ -1,0 +1,1010 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <meta
+        name="description"
+        content="Simulador académico de propagación y atenuación pasiva de señales de radiofrecuencia."
+    >
+
+    <title>
+        Simulador de Atenuación RF
+    </title>
+
+    <link
+        rel="stylesheet"
+        href="css/styles.css"
+    >
+</head>
+
+<body>
+
+    <!-- =========================================================
+         ENCABEZADO
+    ========================================================== -->
+
+    <header class="main-header">
+
+        <div class="header-content">
+
+            <p class="header-tag">
+                Proyecto de Telecomunicaciones
+            </p>
+
+            <h1>
+                Control Conceptual de Señales No Autorizadas
+            </h1>
+
+            <p class="header-description">
+                Simulador académico de propagación,
+                pérdida de trayectoria y atenuación pasiva
+                de señales de radiofrecuencia.
+            </p>
+
+        </div>
+
+    </header>
+
+
+    <!-- =========================================================
+         CONTENIDO PRINCIPAL
+    ========================================================== -->
+
+    <main class="container">
+
+
+        <!-- =====================================================
+             INFORMACIÓN
+        ====================================================== -->
+
+        <section class="intro-card">
+
+            <h2>
+                Simulador de propagación RF
+            </h2>
+
+            <p>
+                El simulador permite analizar cómo la frecuencia,
+                distancia, material y grosor de una barrera afectan
+                la potencia de una señal electromagnética.
+            </p>
+
+            <p>
+                El modelo utiliza pérdida de trayectoria en espacio
+                libre (FSPL), atenuación conceptual de materiales y
+                un balance simplificado de potencia.
+            </p>
+
+        </section>
+
+
+        <!-- =====================================================
+             SIMULADOR
+        ====================================================== -->
+
+        <section class="simulator-grid">
+
+
+            <!-- ===============================
+                 PANEL DE CONTROLES
+            ================================ -->
+
+            <article class="panel controls-panel">
+
+                <div class="panel-title">
+
+                    <span class="step-number">
+                        1
+                    </span>
+
+                    <div>
+                        <h2>
+                            Parámetros
+                        </h2>
+
+                        <p>
+                            Modifique las variables del escenario.
+                        </p>
+                    </div>
+
+                </div>
+
+
+                <!-- Tecnología -->
+
+                <div class="control-group">
+
+                    <label for="tecnologia">
+                        Tecnología / Frecuencia
+                    </label>
+
+                    <select id="tecnologia">
+
+                        <option value="850">
+                            2G — 850 MHz
+                        </option>
+
+                        <option
+                            value="1900"
+                            selected
+                        >
+                            3G — 1900 MHz
+                        </option>
+
+                        <option value="2100">
+                            4G — 2100 MHz
+                        </option>
+
+                        <option value="3500">
+                            5G Sub-6 — 3.5 GHz
+                        </option>
+
+                        <option value="28000">
+                            5G mmWave — 28 GHz
+                        </option>
+
+                    </select>
+
+                </div>
+
+
+                <!-- Distancia -->
+
+                <div class="control-group">
+
+                    <div class="control-header">
+
+                        <label for="distancia">
+                            Distancia
+                        </label>
+
+                        <span class="control-value">
+                            <span id="distanciaValor">
+                                20
+                            </span>
+                            m
+                        </span>
+
+                    </div>
+
+                    <input
+                        type="range"
+                        id="distancia"
+                        min="1"
+                        max="200"
+                        step="1"
+                        value="20"
+                    >
+
+                    <div class="range-labels">
+                        <span>1 m</span>
+                        <span>200 m</span>
+                    </div>
+
+                </div>
+
+
+                <!-- Material -->
+
+                <div class="control-group">
+
+                    <label for="material">
+                        Material de la barrera
+                    </label>
+
+                    <select id="material">
+
+                        <option value="concreto">
+                            Concreto reforzado
+                        </option>
+
+                        <option value="ladrillo">
+                            Ladrillo
+                        </option>
+
+                        <option value="acero">
+                            Malla de acero / Blindaje
+                        </option>
+
+                    </select>
+
+                </div>
+
+
+                <!-- Grosor -->
+
+                <div class="control-group">
+
+                    <div class="control-header">
+
+                        <label for="grosor">
+                            Grosor de la barrera
+                        </label>
+
+                        <span class="control-value">
+                            <span id="grosorValor">
+                                0.30
+                            </span>
+                            m
+                        </span>
+
+                    </div>
+
+                    <input
+                        type="range"
+                        id="grosor"
+                        min="0.05"
+                        max="2"
+                        step="0.05"
+                        value="0.30"
+                    >
+
+                    <div class="range-labels">
+                        <span>0.05 m</span>
+                        <span>2 m</span>
+                    </div>
+
+                </div>
+
+
+                <!-- Potencia -->
+
+                <div class="control-group">
+
+                    <label for="potenciaTx">
+                        Potencia transmitida
+                    </label>
+
+                    <div class="input-with-unit">
+
+                        <input
+                            type="number"
+                            id="potenciaTx"
+                            min="-20"
+                            max="60"
+                            step="1"
+                            value="20"
+                        >
+
+                        <span>
+                            dBm
+                        </span>
+
+                    </div>
+
+                </div>
+
+
+                <!-- Ganancia TX -->
+
+                <div class="control-group">
+
+                    <label for="gananciaTx">
+                        Ganancia antena TX
+                    </label>
+
+                    <div class="input-with-unit">
+
+                        <input
+                            type="number"
+                            id="gananciaTx"
+                            min="-20"
+                            max="30"
+                            step="0.5"
+                            value="0"
+                        >
+
+                        <span>
+                            dBi
+                        </span>
+
+                    </div>
+
+                </div>
+
+
+                <!-- Ganancia RX -->
+
+                <div class="control-group">
+
+                    <label for="gananciaRx">
+                        Ganancia antena RX
+                    </label>
+
+                    <div class="input-with-unit">
+
+                        <input
+                            type="number"
+                            id="gananciaRx"
+                            min="-20"
+                            max="30"
+                            step="0.5"
+                            value="0"
+                        >
+
+                        <span>
+                            dBi
+                        </span>
+
+                    </div>
+
+                </div>
+
+
+                <button
+                    type="button"
+                    id="resetButton"
+                    class="reset-button"
+                >
+                    Restablecer parámetros
+                </button>
+
+            </article>
+
+
+
+            <!-- ===============================
+                 REPRESENTACIÓN VISUAL
+            ================================ -->
+
+            <article class="panel scenario-panel">
+
+                <div class="panel-title">
+
+                    <span class="step-number">
+                        2
+                    </span>
+
+                    <div>
+
+                        <h2>
+                            Representación 2D
+                        </h2>
+
+                        <p>
+                            Modelo conceptual del escenario.
+                        </p>
+
+                    </div>
+
+                </div>
+
+
+                <div class="scenario">
+
+
+                    <!-- Exterior -->
+
+                    <div class="scenario-zone exterior-zone">
+
+                        <span class="zone-label">
+                            EXTERIOR
+                        </span>
+
+
+                        <div class="transmitter">
+
+                            <div class="antenna-icon">
+                                📡
+                            </div>
+
+                            <strong>
+                                Transmisor
+                            </strong>
+
+                            <span id="txPowerVisual">
+                                20 dBm
+                            </span>
+
+                        </div>
+
+                    </div>
+
+
+
+                    <!-- Señal izquierda -->
+
+                    <div
+                        id="signalBefore"
+                        class="signal-path signal-before"
+                    >
+
+                        <span>
+                            RF
+                        </span>
+
+                    </div>
+
+
+
+                    <!-- Muro -->
+
+                    <div
+                        id="wall"
+                        class="wall"
+                    >
+
+                        <span id="wallLabel">
+                            Concreto reforzado
+                        </span>
+
+                        <small id="wallThicknessLabel">
+                            0.30 m
+                        </small>
+
+                    </div>
+
+
+
+                    <!-- Señal interior -->
+
+                    <div
+                        id="signalAfter"
+                        class="signal-path signal-after"
+                    >
+
+                        <span>
+                            RF
+                        </span>
+
+                    </div>
+
+
+
+                    <!-- Interior -->
+
+                    <div class="scenario-zone interior-zone">
+
+                        <span class="zone-label">
+                            INTERIOR
+                        </span>
+
+                        <div class="receiver">
+
+                            <div class="receiver-icon">
+                                📱
+                            </div>
+
+                            <strong>
+                                Receptor
+                            </strong>
+
+                            <span id="rxPowerVisual">
+                                -- dBm
+                            </span>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <div class="scenario-info">
+
+                    <div>
+
+                        <span>
+                            Distancia total
+                        </span>
+
+                        <strong id="scenarioDistance">
+                            20 m
+                        </strong>
+
+                    </div>
+
+                    <div>
+
+                        <span>
+                            Frecuencia
+                        </span>
+
+                        <strong id="scenarioFrequency">
+                            1900 MHz
+                        </strong>
+
+                    </div>
+
+                    <div>
+
+                        <span>
+                            Material
+                        </span>
+
+                        <strong id="scenarioMaterial">
+                            Concreto reforzado
+                        </strong>
+
+                    </div>
+
+                </div>
+
+            </article>
+
+
+
+            <!-- ===============================
+                 RESULTADOS
+            ================================ -->
+
+            <article class="panel results-panel">
+
+                <div class="panel-title">
+
+                    <span class="step-number">
+                        3
+                    </span>
+
+                    <div>
+
+                        <h2>
+                            Resultados
+                        </h2>
+
+                        <p>
+                            Cálculos del modelo.
+                        </p>
+
+                    </div>
+
+                </div>
+
+
+                <div class="result-list">
+
+
+                    <div class="result-item">
+
+                        <span>
+                            Frecuencia
+                        </span>
+
+                        <strong id="resultadoFrecuencia">
+                            --
+                        </strong>
+
+                    </div>
+
+
+                    <div class="result-item">
+
+                        <span>
+                            Longitud de onda λ
+                        </span>
+
+                        <strong id="resultadoLambda">
+                            --
+                        </strong>
+
+                    </div>
+
+
+                    <div class="result-item">
+
+                        <span>
+                            FSPL
+                        </span>
+
+                        <strong id="resultadoFSPL">
+                            --
+                        </strong>
+
+                    </div>
+
+
+                    <div class="result-item">
+
+                        <span>
+                            Coeficiente material
+                        </span>
+
+                        <strong id="resultadoCoeficiente">
+                            --
+                        </strong>
+
+                    </div>
+
+
+                    <div class="result-item">
+
+                        <span>
+                            Pérdida del material
+                        </span>
+
+                        <strong id="resultadoMaterial">
+                            --
+                        </strong>
+
+                    </div>
+
+
+                    <div class="result-item">
+
+                        <span>
+                            Pérdida total
+                        </span>
+
+                        <strong id="resultadoTotal">
+                            --
+                        </strong>
+
+                    </div>
+
+
+                    <div class="result-item highlighted-result">
+
+                        <span>
+                            Potencia recibida
+                        </span>
+
+                        <strong id="resultadoPotencia">
+                            --
+                        </strong>
+
+                    </div>
+
+
+                    <div class="result-item">
+
+                        <span>
+                            Umbral del proyecto
+                        </span>
+
+                        <strong>
+                            -95.00 dBm
+                        </strong>
+
+                    </div>
+
+
+                    <div class="result-item">
+
+                        <span>
+                            Margen
+                        </span>
+
+                        <strong id="resultadoMargen">
+                            --
+                        </strong>
+
+                    </div>
+
+                </div>
+
+
+                <div
+                    id="statusBox"
+                    class="status-box"
+                >
+
+                    <span>
+                        Estado de la señal
+                    </span>
+
+                    <strong id="resultadoEstado">
+                        --
+                    </strong>
+
+                </div>
+
+            </article>
+
+        </section>
+
+
+
+        <!-- =====================================================
+             FÓRMULAS
+        ====================================================== -->
+
+        <section class="formula-section">
+
+            <div class="section-heading">
+
+                <p class="section-tag">
+                    Modelo matemático
+                </p>
+
+                <h2>
+                    Fórmulas utilizadas
+                </h2>
+
+            </div>
+
+
+            <div class="formula-grid">
+
+
+                <article class="formula-card">
+
+                    <h3>
+                        Longitud de onda
+                    </h3>
+
+                    <div class="formula">
+                        λ = c / f
+                    </div>
+
+                    <p>
+                        La longitud de onda disminuye a medida
+                        que aumenta la frecuencia.
+                    </p>
+
+                </article>
+
+
+                <article class="formula-card">
+
+                    <h3>
+                        Free Space Path Loss
+                    </h3>
+
+                    <div class="formula">
+                        FSPL = 32.44 + 20log₁₀(f) + 20log₁₀(d)
+                    </div>
+
+                    <p>
+                        La frecuencia se expresa en MHz
+                        y la distancia en kilómetros.
+                    </p>
+
+                </article>
+
+
+                <article class="formula-card">
+
+                    <h3>
+                        Pérdida del material
+                    </h3>
+
+                    <div class="formula">
+                        Lmaterial = α × t
+                    </div>
+
+                    <p>
+                        α representa un coeficiente conceptual
+                        en dB/m y t el grosor del material.
+                    </p>
+
+                </article>
+
+
+                <article class="formula-card">
+
+                    <h3>
+                        Balance de potencia
+                    </h3>
+
+                    <div class="formula">
+                        Pr = Pt + Gt + Gr − Ltotal
+                    </div>
+
+                    <p>
+                        Permite estimar la potencia disponible
+                        en el receptor.
+                    </p>
+
+                </article>
+
+            </div>
+
+        </section>
+
+
+
+        <!-- =====================================================
+             GRÁFICA
+        ====================================================== -->
+
+        <section class="chart-section">
+
+            <div class="section-heading">
+
+                <p class="section-tag">
+                    Comparación espectral
+                </p>
+
+                <h2>
+                    Potencia recibida según frecuencia
+                </h2>
+
+                <p>
+                    Se conservan la distancia, material,
+                    grosor y potencia seleccionados.
+                </p>
+
+            </div>
+
+
+            <div class="chart-wrapper">
+
+                <canvas
+                    id="comparisonChart"
+                    aria-label="Gráfica comparativa de potencia recibida"
+                >
+                </canvas>
+
+            </div>
+
+        </section>
+
+
+
+        <!-- =====================================================
+             TABLA DE MATERIALES
+        ====================================================== -->
+
+        <section class="materials-section">
+
+            <div class="section-heading">
+
+                <p class="section-tag">
+                    Datos del modelo
+                </p>
+
+                <h2>
+                    Coeficientes de atenuación utilizados
+                </h2>
+
+                <p>
+                    Los siguientes valores son ilustrativos para
+                    fines académicos y permiten demostrar el
+                    comportamiento matemático de la aplicación.
+                </p>
+
+            </div>
+
+
+            <div class="table-wrapper">
+
+                <table>
+
+                    <thead>
+
+                        <tr>
+
+                            <th>
+                                Material
+                            </th>
+
+                            <th>
+                                850 MHz
+                            </th>
+
+                            <th>
+                                1900 MHz
+                            </th>
+
+                            <th>
+                                2100 MHz
+                            </th>
+
+                            <th>
+                                3.5 GHz
+                            </th>
+
+                            <th>
+                                28 GHz
+                            </th>
+
+                        </tr>
+
+                    </thead>
+
+                    <tbody id="materialsTableBody">
+                    </tbody>
+
+                </table>
+
+            </div>
+
+
+            <div class="warning-box">
+
+                <strong>
+                    Importante:
+                </strong>
+
+                <p>
+                    Estos coeficientes son valores simplificados
+                    del modelo académico y no deben interpretarse
+                    como parámetros certificados para el diseño
+                    de una instalación real.
+                </p>
+
+            </div>
+
+        </section>
+
+
+        <!-- =====================================================
+             EXPLICACIÓN
+        ====================================================== -->
+
+        <section class="analysis-section">
+
+            <div class="section-heading">
+
+                <p class="section-tag">
+                    Interpretación
+                </p>
+
+                <h2>
+                    ¿Qué demuestra el simulador?
+                </h2>
+
+            </div>
+
+
+            <div class="analysis-content">
+
+                <p>
+                    Cuando aumenta la frecuencia, la longitud de
+                    onda disminuye. Al mismo tiempo, el término
+                    asociado a la frecuencia dentro del cálculo
+                    FSPL aumenta.
+                </p>
+
+                <p>
+                    La pérdida introducida por los materiales
+                    también puede variar con la frecuencia.
+                    Debido a ello, una misma barrera puede producir
+                    resultados diferentes dependiendo de la banda
+                    de operación.
+                </p>
+
+                <p>
+                    El modelo compara la potencia recibida con un
+                    umbral académico de
+                    <strong>-95 dBm</strong>.
+                    Una potencia inferior a este valor se identifica
+                    como una señal por debajo del umbral establecido
+                    por el proyecto.
+                </p>
+
+            </div>
+
+        </section>
+
+
+    </main>
+
+
+
+    <!-- =========================================================
+         PIE DE PÁGINA
+    ========================================================== -->
+
+    <footer>
+
+        <p>
+            Proyecto académico — Curso de Telecomunicaciones
+        </p>
+
+        <p>
+            Simulación conceptual de propagación y atenuación RF
+        </p>
+
+    </footer>
+
+
+
+    <!-- =========================================================
+         JAVASCRIPT
+    ========================================================== -->
+
+    <script src="js/materials.js"></script>
+    <script src="js/calculations.js"></script>
+    <script src="js/app.js"></script>
+
+</body>
+
+</html>
